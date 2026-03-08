@@ -1,0 +1,6 @@
+streamlit
+ultralytics
+langchain-google-genai
+pillow
+pandas
+matplotlib
