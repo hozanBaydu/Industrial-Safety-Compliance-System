@@ -21,7 +21,7 @@ from langchain_core.prompts import PromptTemplate
 # --- 1. CONFIGURATION & STYLING ---
 st.set_page_config(page_title="AI Safety Sentinel Pro", layout="wide", page_icon="🛡️")
 # API Key'ini güncelledim (Eski hata veren model ismini de düzelttim)
-os.environ["GOOGLE_API_KEY"] = "AIzaSyBpvW-bE6-LXKuf-VDf88Oy5sFF_8obi8w"
+os.environ["GOOGLE_API_KEY"] = "your api key"
 
 st.markdown("""
     <style>
