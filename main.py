@@ -20,7 +20,6 @@ from langchain_core.prompts import PromptTemplate
 
 # --- 1. CONFIGURATION & STYLING ---
 st.set_page_config(page_title="AI Safety Sentinel Pro", layout="wide", page_icon="🛡️")
-# API Key'ini güncelledim (Eski hata veren model ismini de düzelttim)
 os.environ["GOOGLE_API_KEY"] = "your api key"
 
 st.markdown("""
@@ -46,7 +45,7 @@ init_db()
 
 @st.cache_resource
 def load_yolo():
-    return YOLO('best.pt')
+    return YOLO('sentinel-vision-model.pt')
 
 # --- 3. SIDEBAR (CONTROL PANEL) ---
 with st.sidebar:
@@ -66,7 +65,7 @@ HSE GLOBAL PROTOCOLS:
   * Action: No disciplinary action.
 """
 
-# Ajan 1: Sert Denetçi
+# Agent 1: 
 strict_prompt = PromptTemplate.from_template("""
 Role: Strict HSE Auditor.
 Your goal is 100% compliance. If there is a violation in {camera_id}, demand the maximum penalty according to:
@@ -76,7 +75,7 @@ Historical Trend: %{avg_history:.1f}.
 Write a short, harsh enforcement recommendation.
 """)
 
-# Ajan 2: Empatik Koç
+# Agent 2: 
 coach_prompt = PromptTemplate.from_template("""
 Role: HSE Safety Coach.
 Your goal is long-term safety culture. Instead of just fines, suggest training or root-cause analysis.
@@ -85,7 +84,7 @@ Regulations: {regulations}
 Write a supportive, education-oriented recommendation.
 """)
 
-# Ajan 3: Nihai Karar Verici (Consensus)
+# Agent 3:Consensus
 judge_prompt = PromptTemplate.from_template("""
 Role: Senior HSE Director.
 You have received two conflicting reports regarding an incident at {camera_id}.
@@ -141,19 +140,16 @@ if uploaded_file:
         llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.2)
 
         with st.spinner("Agents are debating the incident..."):
-            # 1. Sert Ajan Görüşü
             s_report = (strict_prompt | llm).invoke({
                 "camera_id": camera_id, "regulations": safety_regulations_db,
                 "v_count": v_cnt, "t_count": t_p, "avg_history": avg_history
             })
 
-            # 2. Empatik Ajan Görüşü
             c_report = (coach_prompt | llm).invoke({
                 "camera_id": camera_id, "regulations": safety_regulations_db,
                 "v_count": v_cnt, "t_count": t_p
             })
 
-            # 3. Nihai Karar (Judge)
             final_verdict = (judge_prompt | llm).invoke({
                 "camera_id": camera_id, "strict_report": s_report.content,
                 "coach_report": c_report.content, "v_count": v_cnt, "t_count": t_p
@@ -161,7 +157,6 @@ if uploaded_file:
 
             st.markdown(final_verdict.content)
 
-        # BUTON: Analizi Onay Sırasına Gönder
         if st.button("📥 SUBMIT ANALYSIS TO REVIEW QUEUE"):
             conn.execute("INSERT INTO logs (camera_id, violation_count, total_persons, violation_rate, status, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
                          (camera_id, v_cnt, t_p, v_rate, "PENDING", datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
