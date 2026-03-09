@@ -175,6 +175,55 @@ Human Review
 
 Safety Database
 
+## ▶️ Run the Application (Docker)
+
+This project is containerized using **Docker** and **Docker Compose**, allowing the entire system to run with a single command.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/hozanBaydu/Industrial-Safety-Compliance-System
+cd ai-safety-sentinel
+```
+
+### 2. Create an environment variable file
+
+Create a `.env` file in the project root directory and add your Google API key:
+
+```bash
+GOOGLE_API_KEY=your_google_api_key_here
+```
+
+### 3. Build and run the application
+
+```bash
+docker-compose up --build
+```
+
+Docker will automatically:
+
+- build the application image  
+- install dependencies  
+- start the Streamlit safety monitoring system  
+
+### 4. Open the web interface
+
+After the container starts, open the application in your browser:
+
+```
+http://localhost:8501
+```
+
+### 5. Use the system
+
+Once the application is running you can:
+
+1. Upload a workplace image  
+2. Detect safety equipment using the YOLO model  
+3. Analyze violations using the multi-agent AI system  
+4. Generate an AI safety report  
+5. Send the result to the human review queue
+
 
 The system integrates:
 
@@ -193,4 +242,6 @@ The system integrates:
 - SQLite
 - Matplotlib
 - Pandas
+- Docker
+- Docker Compose
 
